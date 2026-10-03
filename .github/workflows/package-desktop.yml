@@ -1,0 +1,39 @@
+name: package-desktop
+# Builds unsigned installers from a scaffolded desktop-shell on all three OSes,
+# the same way the template's release workflow does, without publishing anything.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'templates/desktop-shell/**'
+      - '.github/workflows/package-desktop.yml'
+jobs:
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            target: --mac
+          - os: windows-latest
+            target: --win
+          - os: ubuntu-latest
+            target: --linux
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: node bin/new-launch.mjs --platform "Zephyr Agent 2" --slug zephyr-desktop --template desktop-shell --out "$RUNNER_TEMP/app" --no-git
+      - run: npm ci
+        working-directory: ${{ runner.temp }}/app
+      - run: npx electron-builder ${{ matrix.target }} --publish never
+        working-directory: ${{ runner.temp }}/app
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - run: ls -la release
+        working-directory: ${{ runner.temp }}/app
