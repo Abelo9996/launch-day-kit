@@ -1,0 +1,37 @@
+name: ci
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  kit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: git config --global user.name ci && git config --global user.email ci@example.com
+      - run: npm test
+  template:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        template: [awesome-list, tui-wrapper, desktop-shell, plugin-market, model-router]
+        include:
+          - os: macos-latest
+            template: desktop-shell
+          - os: macos-latest
+            template: tui-wrapper
+    name: ${{ matrix.template }} (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: git config --global user.name ci && git config --global user.email ci@example.com
+      - if: runner.os == 'Linux' && matrix.template == 'desktop-shell'
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+      - run: node scripts/rehearse.mjs --only ${{ matrix.template }}
