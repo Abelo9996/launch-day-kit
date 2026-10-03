@@ -1,0 +1,16 @@
+{
+  "name": "launch-day-kit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Templates, scaffolder and playbook for shipping companion repos on AI platform launch day.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "new": "node bin/new-launch.mjs",
+    "test": "node --test \"test/*.test.mjs\" && node scripts/check-text.mjs",
+    "rehearse": "node scripts/rehearse.mjs",
+    "rehearse:write": "node scripts/rehearse.mjs --write",
+    "check": "node scripts/check-text.mjs"
+  }
+}
