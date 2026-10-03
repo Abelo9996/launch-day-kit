@@ -1,6 +1,6 @@
 # launch-day-kit
 
-Private toolkit for shipping a companion repo within hours of an AI platform launch.
+Ship a companion repo within hours of an AI platform launch: a playbook plus five tested templates (awesome-list, terminal UI, desktop app, plugin market, model router) and a one-command scaffolder.
 
 ## What's here
 
@@ -26,7 +26,7 @@ cd ../awesome-qwen4 && npm install && npm test
 gh repo create <owner>/awesome-qwen4 --public --source . --push --description "Curated list of Qwen 4 tools, clients and guides."
 ```
 
-Flags: `--owner` (default `$LAUNCH_OWNER` or `Abelo9996`), `--date YYYY-MM-DD`, `--zh` (keep EN/ZH files), `--no-git`, `--list`.
+Flags: `--owner` (default `$LAUNCH_OWNER`, else your `gh` login, else `git config github.user`), `--date YYYY-MM-DD`, `--zh` (keep EN/ZH files), `--no-git`, `--list`.
 
 Placeholders in templates: `__PLATFORM__`, `__SLUG__`, `__OWNER__`, `__REPO_URL__`, `__DATE__`, `__YEAR__`. They also work in file names. `<!-- zh:start -->...<!-- zh:end -->` blocks are dropped without `--zh`.
 

@@ -85,7 +85,7 @@ Target: awesome-list public by +1 h, TUI by +1 h, desktop repo public by +2 h.
 - [ ] Ship a visible update every day: release notes, new entries, fixes. A stale repo on day 2 reads as abandoned.
 - [ ] Cross-link your repos (list links to your desktop app and router, and the other way around).
 - [ ] Submit entries to other people's lists, including the vendor's official community list if there is one.
-- [ ] Record stars at +12 h, +24 h and +48 h in the repo's launch notes (private) for the kill rule.
+- [ ] Record stars at +12 h, +24 h and +48 h in your own launch notes for the kill rule.
 
 ## Week 1
 

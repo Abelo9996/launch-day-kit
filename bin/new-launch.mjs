@@ -26,7 +26,7 @@ Options:
   --slug <slug>       Repo name, lowercase and hyphenated, e.g. deepseek-harness-desktop
   --template <name>   One of: ${listTemplates().join(', ')}
   --out <dir>         Target directory (must not exist or must be empty)
-  --owner <user>      GitHub owner for the repo URL (default: $LAUNCH_OWNER or Abelo9996)
+  --owner <user>      GitHub owner for the repo URL (default: $LAUNCH_OWNER, else your gh login)
   --date <YYYY-MM-DD> Launch date written into files (default: today, UTC)
   --zh                Keep bilingual EN/ZH files and README language switcher
   --no-git            Do not run git init / initial commit
@@ -76,8 +76,24 @@ export function validate(opts) {
   return errors;
 }
 
+// Owner for repo URLs when --owner and $LAUNCH_OWNER are unset: the logged-in gh user,
+// then git's github.user setting, then a placeholder the publish check will flag.
+export function detectOwner() {
+  const tries = [
+    ['gh', ['api', 'user', '--jq', '.login']],
+    ['git', ['config', '--get', 'github.user']],
+  ];
+  for (const [cmd, args] of tries) {
+    try {
+      const out = execFileSync(cmd, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 5000 }).trim();
+      if (/^[A-Za-z0-9-]+$/.test(out)) return out;
+    } catch {}
+  }
+  return 'your-github-user';
+}
+
 export function placeholders(opts) {
-  const owner = opts.owner || process.env.LAUNCH_OWNER || 'Abelo9996';
+  const owner = opts.owner || process.env.LAUNCH_OWNER || detectOwner();
   const date = opts.date || new Date().toISOString().slice(0, 10);
   return {
     __PLATFORM__: opts.platform,
