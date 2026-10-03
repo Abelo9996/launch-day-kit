@@ -1,5 +1,7 @@
 # launch-day-kit
 
+![launch-day-kit scaffolding a model-router repo for a fake platform, then installing it and passing all 10 of its tests in seconds](docs/demo.gif)
+
 Ship a companion repo within hours of an AI platform launch: a playbook plus five tested templates (awesome-list, terminal UI, desktop app, plugin market, model router) and a one-command scaffolder.
 
 ## What's here
