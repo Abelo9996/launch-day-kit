@@ -1,0 +1,14 @@
+{
+  "name": "__SLUG__",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A curated list of tools, clients, plugins and guides for __PLATFORM__.",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "lint": "node scripts/lint-list.mjs",
+    "links": "node scripts/check-links.mjs",
+    "links:online": "node scripts/check-links.mjs --online",
+    "test": "node scripts/lint-list.mjs && node scripts/check-links.mjs && node --test \"test/*.test.mjs\""
+  }
+}

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'" />
+    <title>__PLATFORM__ Desktop</title>
+    <link rel="stylesheet" href="../../node_modules/@xterm/xterm/css/xterm.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <span id="title">__PLATFORM__</span>
+      <span id="command"></span>
+      <span class="spacer"></span>
+      <button id="restart" title="Restart (Cmd/Ctrl+R)">Restart</button>
+      <button id="config" title="Edit config (Cmd/Ctrl+,)">Config</button>
+    </header>
+    <div id="banner" hidden></div>
+    <main id="terminal"></main>
+    <script src="../../node_modules/@xterm/xterm/lib/xterm.js"></script>
+    <script src="../../node_modules/@xterm/addon-fit/lib/addon-fit.js"></script>
+    <script src="renderer.js"></script>
+  </body>
+</html>

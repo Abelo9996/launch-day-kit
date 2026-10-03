@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>__PLATFORM__ Plugin Market</title>
+    <meta name="description" content="Search __PLATFORM__ plugins and skills and copy the install command." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="wrap">
+        <h1 id="name">__PLATFORM__ Plugin Market</h1>
+        <p class="sub">Search, copy, paste into your terminal. <a href="__REPO_URL__#add-a-plugin">Add yours</a>.</p>
+        <div class="controls">
+          <input id="q" type="search" placeholder="Search plugins and skills (press /)" autocomplete="off" />
+          <select id="sort" aria-label="Sort">
+            <option value="name">A to Z</option>
+            <option value="newest">Newest</option>
+          </select>
+        </div>
+        <nav id="chips"></nav>
+        <p id="count" class="count"></p>
+      </div>
+    </header>
+    <main class="wrap"><section id="grid" class="grid"></section></main>
+    <footer class="wrap foot"><a href="__REPO_URL__">Source</a> · MIT · Not affiliated with the vendor of __PLATFORM__.</footer>
+    <script type="module" src="app.mjs"></script>
+  </body>
+</html>

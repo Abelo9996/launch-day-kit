@@ -1,0 +1,35 @@
+:root {
+  --bg: #ffffff; --fg: #1d2129; --muted: #667085; --card: #f7f8fa; --line: #e4e7ec; --accent: #2457f5; --ok: #12805c;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0f1115; --fg: #e6e8ec; --muted: #98a2b3; --card: #171a21; --line: #262b36; --accent: #7aa2f7; --ok: #4ade80; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+a { color: var(--accent); }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+.top { border-bottom: 1px solid var(--line); padding: 28px 0 12px; }
+h1 { margin: 0; font-size: 26px; }
+.sub { margin: 4px 0 16px; color: var(--muted); }
+.controls { display: flex; gap: 8px; }
+#q { flex: 1; font: inherit; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--fg); }
+select { font: inherit; padding: 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--fg); }
+#chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 4px; }
+.chip { font: inherit; font-size: 13px; padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--fg); cursor: pointer; }
+.chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.count { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; padding: 18px 0; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.card header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.card h2 { font-size: 16px; margin: 0; }
+.card h2 a { color: var(--fg); text-decoration: none; }
+.cat { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.desc { margin: 0; flex: 1; }
+.install { display: flex; gap: 6px; align-items: stretch; }
+.install code { flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; padding: 6px 8px; border-radius: 6px; background: var(--bg); border: 1px solid var(--line); font: 12.5px Menlo, Consolas, monospace; }
+.copy { font: inherit; font-size: 13px; padding: 0 12px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: #fff; cursor: pointer; }
+.copy.ok { background: var(--ok); border-color: var(--ok); }
+.card footer { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--muted); }
+.empty { color: var(--muted); }
+.foot { color: var(--muted); font-size: 13px; padding: 24px 16px 40px; }
+@media (max-width: 520px) { .grid { grid-template-columns: 1fr; } .controls { flex-direction: column; } }

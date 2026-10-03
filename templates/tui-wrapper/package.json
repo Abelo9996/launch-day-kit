@@ -1,0 +1,23 @@
+{
+  "name": "__SLUG__",
+  "version": "0.1.0",
+  "description": "A terminal UI for __PLATFORM__: session list, scrollback and keybindings around any CLI agent command.",
+  "type": "module",
+  "license": "MIT",
+  "repository": "__REPO_URL__",
+  "bin": { "__SLUG__": "bin/cli.mjs" },
+  "files": ["bin", "src"],
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node bin/cli.mjs",
+    "demo": "node bin/cli.mjs -- node test/fake-agent.mjs {prompt}",
+    "test": "node --test \"test/*.test.mjs\""
+  },
+  "dependencies": {
+    "ink": "7.1.1",
+    "react": "19.3.0"
+  },
+  "devDependencies": {
+    "ink-testing-library": "4.0.0"
+  }
+}

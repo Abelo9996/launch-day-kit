@@ -1,0 +1,15 @@
+{
+  "name": "__SLUG__",
+  "version": "0.1.0",
+  "description": "OpenAI-compatible router for __PLATFORM__ and friends: one config entry per model, automatic fallback, per-request logs.",
+  "type": "module",
+  "license": "MIT",
+  "repository": "__REPO_URL__",
+  "bin": { "__SLUG__": "bin/cli.mjs" },
+  "files": ["bin", "src", "router.config.example.json"],
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node bin/cli.mjs",
+    "test": "node --test \"test/*.test.mjs\""
+  }
+}

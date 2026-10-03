@@ -1,0 +1,15 @@
+{
+  "port": 8787,
+  "host": "127.0.0.1",
+  "timeoutMs": 60000,
+  "log": "logs/requests.jsonl",
+  "providers": {
+    "official": { "baseUrl": "https://api.example.com/v1", "apiKeyEnv": "PLATFORM_API_KEY" },
+    "openrouter": { "baseUrl": "https://openrouter.ai/api/v1", "apiKeyEnv": "OPENROUTER_API_KEY" },
+    "local": { "baseUrl": "http://127.0.0.1:11434/v1" }
+  },
+  "models": {
+    "__SLUG__-default": ["official/model-name", "openrouter/vendor/model-name", "local/model-name"],
+    "fast": ["local/model-name"]
+  }
+}

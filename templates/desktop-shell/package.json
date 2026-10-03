@@ -1,0 +1,67 @@
+{
+  "name": "__SLUG__",
+  "productName": "__PLATFORM__ Desktop",
+  "version": "0.1.0",
+  "description": "Desktop app for __PLATFORM__: runs the official CLI agent in a real terminal window.",
+  "main": "src/main.js",
+  "license": "MIT",
+  "repository": "__REPO_URL__",
+  "scripts": {
+    "postinstall": "node scripts/fix-pty.js",
+    "start": "electron .",
+    "test": "node --test \"test/*.test.js\" && node scripts/smoke.js",
+    "smoke": "node scripts/smoke.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win",
+    "dist:linux": "electron-builder --linux"
+  },
+  "dependencies": {
+    "@xterm/addon-fit": "0.11.0",
+    "@xterm/xterm": "6.0.0",
+    "node-pty": "1.1.0"
+  },
+  "devDependencies": {
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "io.github.__OWNER__.__SLUG__",
+    "productName": "__PLATFORM__ Desktop",
+    "files": [
+      "src/**/*",
+      "package.json",
+      "LICENSE"
+    ],
+    "asarUnpack": [
+      "node_modules/node-pty/**"
+    ],
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.developer-tools"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Development",
+      "maintainer": "__OWNER__"
+    },
+    "publish": null
+  }
+}

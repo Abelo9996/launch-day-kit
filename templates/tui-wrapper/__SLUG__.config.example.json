@@ -1,0 +1,7 @@
+{
+  "title": "__PLATFORM__",
+  "command": "your-agent-cli",
+  "args": ["-p", "{prompt}", "--session-id", "{session}"],
+  "cwd": ".",
+  "env": {}
+}

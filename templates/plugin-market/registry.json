@@ -1,0 +1,38 @@
+{
+  "name": "__PLATFORM__ Plugin Market",
+  "installTemplate": "your-agent-cli plugin install {repo}",
+  "categories": ["Tools", "Coding", "Data", "Writing", "Integrations", "Skills"],
+  "plugins": [
+    {
+      "id": "web-search",
+      "name": "Web Search",
+      "description": "Lets the agent search the web and cite sources.",
+      "author": "example",
+      "repo": "https://github.com/example/web-search",
+      "category": "Tools",
+      "tags": ["search", "web"],
+      "added": "__DATE__"
+    },
+    {
+      "id": "git-helper",
+      "name": "Git Helper",
+      "description": "Writes commit messages, splits diffs and drafts PR descriptions.",
+      "author": "example",
+      "repo": "https://github.com/example/git-helper",
+      "category": "Coding",
+      "tags": ["git", "review"],
+      "added": "__DATE__"
+    },
+    {
+      "id": "sql-explorer",
+      "name": "SQL Explorer",
+      "description": "Read-only SQL access to Postgres and SQLite with schema browsing.",
+      "author": "example",
+      "repo": "https://github.com/example/sql-explorer",
+      "install": "your-agent-cli plugin install example/sql-explorer --read-only",
+      "category": "Data",
+      "tags": ["sql", "postgres", "sqlite"],
+      "added": "__DATE__"
+    }
+  ]
+}

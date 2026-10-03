@@ -1,0 +1,14 @@
+{
+  "name": "__SLUG__",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Searchable catalog of __PLATFORM__ plugins and skills with one-click install commands.",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "validate": "node scripts/validate-registry.mjs",
+    "build": "node scripts/build.mjs",
+    "start": "node scripts/build.mjs && node scripts/serve.mjs dist",
+    "test": "node scripts/validate-registry.mjs && node scripts/build.mjs && node --test \"test/*.test.mjs\""
+  }
+}
