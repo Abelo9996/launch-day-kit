@@ -51,7 +51,7 @@ Each scaffolded repo runs `npm test`:
 - **plugin-market**: registry validation (including unsafe install commands), search and install-command logic, build, then serves `dist/` and fetches the page and registry.
 - **model-router**: fake upstreams; fallback on 5xx and connection errors, no fallback on 4xx, SSE passthrough, `/v1/models`, JSONL log contents.
 
-CI (`.github/workflows/ci.yml`) runs the kit tests plus the rehearsal for each template on Ubuntu, and desktop-shell and tui-wrapper again on macOS.
+CI (`.github/workflows/ci.yml`) runs the kit tests plus the rehearsal for each template on Ubuntu, and desktop-shell and tui-wrapper again on macOS. `.github/workflows/package-desktop.yml` builds unsigned desktop-shell installers on macOS, Windows and Linux whenever that template changes (or on manual dispatch).
 
 ## Maintenance
 

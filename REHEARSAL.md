@@ -32,6 +32,20 @@ Run 2026-10-03 08:47 UTC, node v22.22.2, darwin-arm64, platform "Zephyr Agent 2"
 | plugin-market | pass | 50 ms | 0 ms | 357 ms | 418 ms |
 | tui-wrapper | pass | 48 ms | 670 ms | 1.0 s | 1.8 s |
 
+GitHub Actions, run 37110888825 (cold runners, includes `npm ci`):
+
+| Template | Runner | Scaffold | Install | Smoke test | Total |
+| --- | --- | --- | --- | --- | --- |
+| awesome-list | ubuntu-latest | 28 ms | 0 ms | 445 ms | 479 ms |
+| tui-wrapper | ubuntu-latest | 23 ms | 2.2 s | 1.4 s | 3.7 s |
+| tui-wrapper | macos-latest | 60 ms | 2.2 s | 1.2 s | 3.5 s |
+| desktop-shell | ubuntu-latest (xvfb, node-pty compiled) | 32 ms | 13.8 s | 4.5 s | 18.3 s |
+| desktop-shell | macos-latest | 53 ms | 2.3 s | 3.4 s | 5.8 s |
+| plugin-market | ubuntu-latest | 27 ms | 0 ms | 562 ms | 596 ms |
+| model-router | ubuntu-latest | 22 ms | 0 ms | 336 ms | 362 ms |
+
+Desktop installers (`package-desktop` workflow, run 37110960757, unsigned): macOS `.dmg` + `.zip` in 43 s, Linux `.AppImage` + `.deb` in 2 m 13 s, Windows NSIS `.exe` + `.zip` in 6 m 24 s.
+
 ## Human time (estimated, not measured)
 
 What is left after the script, per template. These are estimates for planning, to be replaced with real numbers after the first live launch.
