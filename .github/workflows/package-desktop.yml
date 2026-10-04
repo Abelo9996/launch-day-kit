@@ -28,7 +28,7 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-      - run: node bin/new-launch.mjs --platform "Zephyr Agent 2" --slug zephyr-desktop --template desktop-shell --out "$RUNNER_TEMP/app" --no-git
+      - run: node bin/new-launch.mjs --platform "Zephyr Agent 2" --slug zephyr-desktop --template desktop-shell --out "$RUNNER_TEMP/app" --owner zephyr-test --no-git
       - run: npm ci
         working-directory: ${{ runner.temp }}/app
       # Same build command as the template's release workflow when no signing secrets are set.
