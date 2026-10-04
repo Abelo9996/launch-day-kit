@@ -185,7 +185,7 @@ export function groupTodos(todos) {
 
 const shortPath = (p) => {
   const rel = relative(process.cwd(), p) || '.';
-  return rel.startsWith('..') ? p : rel;
+  return rel.split(/[\\/]/).filter((x) => x === '..').length > 2 ? p : rel;
 };
 
 function walk(dir, files = []) {
