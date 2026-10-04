@@ -82,7 +82,15 @@ export function App({ config, store, run = defaultRun, rows: fixedRows }) {
     } else if (key.escape) {
       setInput('');
     } else if (ch && !key.ctrl && !key.meta) {
-      setInput((v) => v + ch);
+      // A paste or fast typing can deliver text and Enter in one chunk. A single trailing
+      // newline sends; newlines inside pasted text become spaces (the input is one line).
+      const text = ch.replace(/\r\n?/g, '\n');
+      if (text.endsWith('\n') && !text.slice(0, -1).includes('\n')) {
+        send(input + text.slice(0, -1));
+        setInput('');
+      } else {
+        setInput((v) => v + text.replace(/\n/g, ' '));
+      }
     }
   });
 
@@ -104,5 +112,8 @@ export function App({ config, store, run = defaultRun, rows: fixedRows }) {
         ...visible.map((line, i) => h(Text, { key: i, wrap: 'truncate-end' }, line || ' ')))),
     h(Box, { borderStyle: 'round', borderColor: 'cyan', paddingX: 1 },
       h(Text, null, '> ', input || h(Text, { dimColor: true }, running ? 'running... ctrl+x to stop' : 'type a prompt, enter to send'))),
-    h(Text, { dimColor: true }, ' ' + KEYS.map(([k, v]) => `${k} ${v}`).join('  ')));
+    h(Text, { dimColor: true }, ' ' + KEYS.map(([k, v]) => `${k} ${v}`).join('  ')),
+    config.configured === false
+      ? h(Text, { color: 'yellow' }, ` No agent command set, so prompts go to "${config.command}". Start with: __SLUG__ -- <agent-cli> -p {prompt}`)
+      : null);
 }

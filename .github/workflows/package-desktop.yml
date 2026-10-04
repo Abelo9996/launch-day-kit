@@ -31,9 +31,17 @@ jobs:
       - run: node bin/new-launch.mjs --platform "Zephyr Agent 2" --slug zephyr-desktop --template desktop-shell --out "$RUNNER_TEMP/app" --no-git
       - run: npm ci
         working-directory: ${{ runner.temp }}/app
-      - run: npx electron-builder ${{ matrix.target }} --publish never
+      # Same build command as the template's release workflow when no signing secrets are set.
+      - run: |
+          extra=()
+          if [ "$RUNNER_OS" = "macOS" ]; then extra=(-c.mac.identity=- -c.mac.hardenedRuntime=false); fi
+          npx electron-builder ${{ matrix.target }} --publish never "${extra[@]}"
         working-directory: ${{ runner.temp }}/app
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
       - run: ls -la release
+        working-directory: ${{ runner.temp }}/app
+      # An unsealed signature makes Gatekeeper call the download "damaged" on Apple Silicon.
+      - if: runner.os == 'macOS'
+        run: codesign --verify --deep --strict release/mac*/*.app && DESKTOP_SMOKE=1 release/mac*/*.app/Contents/MacOS/* | grep 'SMOKE OK'
         working-directory: ${{ runner.temp }}/app

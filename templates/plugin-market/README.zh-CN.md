@@ -6,6 +6,7 @@
 
 **浏览：** https://__OWNER__.github.io/__SLUG__/
 
+<!-- TODO before posting: put a real screenshot at docs/screenshot.png (real app, real output, under 3 MB). -->
 ![screenshot](docs/screenshot.png)
 
 ## 为什么
@@ -23,4 +24,4 @@ npm start
 
 ## 许可证
 
-MIT
+MIT。非官方项目，与 __PLATFORM__ 官方无关。

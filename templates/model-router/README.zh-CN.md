@@ -4,10 +4,12 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+<!-- TODO before posting: put a real recording at docs/demo.gif (real app, real output, under 3 MB). -->
 ![demo](docs/demo.gif)
 
 ```bash
-npx github:__OWNER__/__SLUG__ --config router.config.json
+npx github:__OWNER__/__SLUG__ --init   # 在当前目录生成 router.config.json，填入服务商和模型 ID
+npx github:__OWNER__/__SLUG__
 ```
 
 ## 为什么
@@ -23,7 +25,8 @@ npx github:__OWNER__/__SLUG__ --config router.config.json
 
 ```bash
 git clone __REPO_URL__ && cd __SLUG__
-cp router.config.example.json router.config.json
+npm start -- --init      # 生成 router.config.json 后编辑
+export PLATFORM_API_KEY=...
 npm start
 ```
 
@@ -39,4 +42,4 @@ npm start
 
 ## 许可证
 
-MIT
+MIT。非官方项目，与 __PLATFORM__ 官方无关。

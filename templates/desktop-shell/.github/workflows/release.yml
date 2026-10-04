@@ -24,10 +24,26 @@ jobs:
         with:
           node-version: 22
       - run: npm ci
-      - run: npx electron-builder ${{ matrix.target }} --publish never
+      - name: Build installers
+        shell: bash
+        run: |
+          extra=()
+          if [ -z "$CSC_LINK" ]; then
+            # No certificate. On macOS, ad-hoc sign the whole bundle: an unsealed signature makes
+            # Apple Silicon Macs call the download "damaged", with no way to open it from Settings.
+            export CSC_IDENTITY_AUTO_DISCOVERY=false
+            if [ "$RUNNER_OS" = "macOS" ]; then extra=(-c.mac.identity=- -c.mac.hardenedRuntime=false); fi
+          fi
+          npx electron-builder ${{ matrix.target }} --publish never "${extra[@]}"
         env:
-          # Unsigned builds by default. Add CSC_LINK / CSC_KEY_PASSWORD (and APPLE_* for notarization) secrets to sign.
-          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+          # Optional signing secrets. Without them builds are unsigned (ad-hoc signed on macOS).
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      - if: runner.os == 'macOS'
+        run: codesign --verify --deep --strict release/mac*/*.app
       - uses: actions/upload-artifact@v7
         with:
           name: dist-${{ runner.os }}

@@ -1,6 +1,6 @@
 {
   "name": "launch-day-kit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Templates, scaffolder and playbook for shipping companion repos on AI platform launch day.",
   "type": "module",

@@ -46,6 +46,14 @@ export function loadConfig(path) {
   return normalizeConfig(JSON.parse(readFileSync(path, 'utf8')));
 }
 
+// Providers whose apiKeyEnv is not set. Requests to them go out without a key and usually
+// come back 401, which does not fall through to the next target.
+export function missingKeys(cfg, env = process.env) {
+  return Object.entries(cfg.providers)
+    .filter(([, p]) => p.apiKeyEnv && !env[p.apiKeyEnv])
+    .map(([name, p]) => `provider "${name}": ${p.apiKeyEnv} is not set, requests to it will be sent without a key`);
+}
+
 // Resolve a requested model to an ordered list of {provider, model} targets.
 // Unknown aliases of the form "provider/model" are passed straight through.
 export function resolveTargets(cfg, requested) {

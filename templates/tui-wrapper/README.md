@@ -6,6 +6,7 @@
 [English](README.md) | [简体中文](README.zh-CN.md)
 <!-- zh:end -->
 
+<!-- TODO before posting: put a real recording at docs/demo.gif (real app, real output, under 3 MB). -->
 ![demo](docs/demo.gif)
 
 ```bash
@@ -14,7 +15,7 @@ npx github:__OWNER__/__SLUG__ -- your-agent-cli -p {prompt}
 
 ## Why
 
-The stock __PLATFORM__ CLI prints one long scroll per run and forgets which conversation was which. This keeps several sessions side by side, shows which one is still running, and lets you stop a run without killing your terminal. It wraps the official binary, so new CLI flags work the day they ship.
+The stock CLI prints one long scroll per run and forgets which conversation was which. This keeps several sessions side by side, shows which one is still running, and lets you stop a run without killing your terminal. It wraps the official binary, so new CLI flags work the day they ship.
 
 ```
 ╭ Sessions ──────────╮╭ __PLATFORM__ | fix the flaky test | running ─────────╮
@@ -66,4 +67,4 @@ npm test
 
 ## License
 
-MIT
+MIT. Unofficial; not affiliated with the vendor of __PLATFORM__.

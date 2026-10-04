@@ -53,6 +53,9 @@ test('built site serves index, app and registry', async () => {
     const r = await (await fetch(base + 'registry.json')).json();
     assert.equal(r.plugins.length, reg.plugins.length);
     assert.equal((await fetch(base + '../package.json')).status, 404);
+    // A malformed escape used to throw inside the handler and take the server down.
+    assert.equal((await fetch(base + '%E0%A4%A')).status, 400);
+    assert.equal((await fetch(base)).status, 200);
   } finally {
     srv.close();
   }

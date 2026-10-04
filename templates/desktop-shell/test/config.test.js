@@ -50,3 +50,31 @@ test('node-pty loads and runs a command', async () => {
   await new Promise((r) => p.onExit(r));
   assert.match(out, /pty-ok/);
 });
+
+test('login shell PATH is read between markers, ignoring rc file noise', () => {
+  const { parseShellPath, LOGIN_PATH_SCRIPT } = require('../src/config');
+  assert.match(LOGIN_PATH_SCRIPT, /printenv PATH/);
+  const out = 'Welcome back!\n__DESKTOP_PATH__\n/opt/homebrew/bin:/usr/bin:/bin\n__DESKTOP_PATH__\n';
+  assert.equal(parseShellPath(out), '/opt/homebrew/bin:/usr/bin:/bin');
+  assert.equal(parseShellPath('no markers here'), '');
+  assert.equal(parseShellPath(''), '');
+});
+
+test('mergePath puts the login shell PATH first and drops duplicates', () => {
+  const { mergePath } = require('../src/config');
+  assert.equal(mergePath('/opt/homebrew/bin:/usr/bin', '/usr/bin:/bin', ':'), '/opt/homebrew/bin:/usr/bin:/bin');
+  assert.equal(mergePath('', '/usr/bin', ':'), '/usr/bin');
+});
+
+test('findOnPath finds executables and reports missing commands', { skip: process.platform === 'win32' }, () => {
+  const { findOnPath } = require('../src/config');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bin-'));
+  const exe = path.join(dir, 'agent');
+  fs.writeFileSync(exe, '#!/bin/sh\n', { mode: 0o755 });
+  fs.writeFileSync(path.join(dir, 'notes'), 'x', { mode: 0o644 });
+  assert.equal(findOnPath('agent', `/nope:${dir}`), exe);
+  assert.equal(findOnPath('notes', dir), null);
+  assert.equal(findOnPath('missing-agent', dir), null);
+  assert.equal(findOnPath(exe, ''), exe);
+  assert.equal(findOnPath('/no/such/agent', dir), null);
+});

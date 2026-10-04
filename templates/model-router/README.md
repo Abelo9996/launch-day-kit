@@ -6,10 +6,12 @@
 [English](README.md) | [简体中文](README.zh-CN.md)
 <!-- zh:end -->
 
+<!-- TODO before posting: put a real recording at docs/demo.gif (real app, real output, under 3 MB). -->
 ![demo](docs/demo.gif)
 
 ```bash
-npx github:__OWNER__/__SLUG__ --config router.config.json
+npx github:__OWNER__/__SLUG__ --init   # writes router.config.json here; edit providers and model IDs
+npx github:__OWNER__/__SLUG__
 ```
 
 ## Why
@@ -21,12 +23,13 @@ New models launch on one provider, get rate limited for days, and show up on two
 - Streaming (SSE) passed through untouched
 - One JSONL log line per request: every attempt, status, latency, token usage
 - `provider/model` works without any config entry
+- `timeoutMs` is how long to wait for a provider to start answering; a started stream runs as long as it keeps sending, and is cut after `timeoutMs` of silence
 
 ## Quick start
 
 ```bash
 git clone __REPO_URL__ && cd __SLUG__
-cp router.config.example.json router.config.json   # edit providers and keys
+npm start -- --init                                # writes router.config.json; edit providers and model IDs
 export PLATFORM_API_KEY=...                        # whatever apiKeyEnv names
 npm start
 ```
@@ -75,4 +78,4 @@ Set `ROUTER_API_KEY` to require `Authorization: Bearer <key>` on inbound request
 
 ## License
 
-MIT
+MIT. Unofficial; not affiliated with the vendor of __PLATFORM__.

@@ -22,15 +22,29 @@ Every template ships MIT `LICENSE`, `README.md` following the playbook pattern, 
 
 ## Launch day
 
+Needs Node 22+ and git. `gh` (logged in) is optional but saves typing your GitHub user. Not on npm; use it from a clone:
+
 ```bash
+git clone https://github.com/Abelo9996/launch-day-kit && cd launch-day-kit
 node bin/new-launch.mjs --platform "Qwen 4" --slug awesome-qwen4 --template awesome-list --out ../awesome-qwen4 --zh
 cd ../awesome-qwen4 && npm install && npm test
+```
+
+The scaffolder prints every stand-in the template ships (example entries, `your-agent-cli`, placeholder model IDs, the demo image path) as `file:lines`. Replace them, then:
+
+```bash
+node ../launch-day-kit/bin/new-launch.mjs --check .   # exit 0 when nothing from the template is left
+git add -A && git commit -m "Fill in for launch"
 gh repo create <owner>/awesome-qwen4 --public --source . --push --description "Curated list of Qwen 4 tools, clients and guides."
 ```
 
-Flags: `--owner` (default `$LAUNCH_OWNER`, else your `gh` login, else `git config github.user`), `--date YYYY-MM-DD`, `--zh` (keep EN/ZH files), `--no-git`, `--list`.
+[PLAYBOOK.md](PLAYBOOK.md) has the per-template list of what to replace and the timeline around it.
 
-Placeholders in templates: `__PLATFORM__`, `__SLUG__`, `__OWNER__`, `__REPO_URL__`, `__DATE__`, `__YEAR__`. They also work in file names. `<!-- zh:start -->...<!-- zh:end -->` blocks are dropped without `--zh`.
+Flags: `--owner` (default `$LAUNCH_OWNER`, else your `gh` login, else `git config github.user`; if none is set the scaffolder stops and says so), `--author` (LICENSE holder, default `git config user.name`, else the owner), `--date YYYY-MM-DD`, `--zh` (keep EN/ZH files), `--no-git`, `--list`, `--check <dir>`.
+
+If git has no `user.name`/`user.email`, the scaffolder runs `git init` but leaves the first commit to you, so the repo is not pushed under an identity git made up from your login and host name.
+
+Placeholders in templates: `__PLATFORM__`, `__SLUG__`, `__OWNER__`, `__AUTHOR__`, `__REPO_URL__`, `__DATE__`, `__YEAR__`. They also work in file names. `<!-- zh:start -->...<!-- zh:end -->` blocks are dropped without `--zh`.
 
 ## Rehearse
 
@@ -49,11 +63,11 @@ Each scaffolded repo runs `npm test`:
 
 - **awesome-list**: list format, contents vs sections, duplicate links, anchors and local links. `npm run links:online` fetches every URL.
 - **tui-wrapper**: renders the UI with ink-testing-library, types a prompt, runs a fake agent, checks streamed output, exit codes, session switching.
-- **desktop-shell**: config unit tests, node-pty spawn, then launches the real Electron app headless (`xvfb-run` on Linux) and waits until pty output appears in the xterm.js buffer.
+- **desktop-shell**: config unit tests, node-pty spawn, then launches the real Electron app headless (`xvfb-run` on Linux) and waits until pty output appears in the xterm.js buffer; a second launch uses the minimal `PATH` a Finder or Dock launch gets and checks the agent command is still found through the login shell.
 - **plugin-market**: registry validation (including unsafe install commands), search and install-command logic, build, then serves `dist/` and fetches the page and registry.
-- **model-router**: fake upstreams; fallback on 5xx and connection errors, no fallback on 4xx, SSE passthrough, `/v1/models`, JSONL log contents.
+- **model-router**: fake upstreams; fallback on 5xx and connection errors, no fallback on 4xx, SSE passthrough, streams longer than `timeoutMs`, stalled streams, client disconnects, `/v1/models`, JSONL log contents, CLI errors.
 
-CI (`.github/workflows/ci.yml`) runs the kit tests plus the rehearsal for each template on Ubuntu, and desktop-shell and tui-wrapper again on macOS. `.github/workflows/package-desktop.yml` builds unsigned desktop-shell installers on macOS, Windows and Linux whenever that template changes (or on manual dispatch).
+CI (`.github/workflows/ci.yml`) runs the kit tests plus the rehearsal for each template on Ubuntu, and desktop-shell and tui-wrapper again on macOS. `.github/workflows/package-desktop.yml` builds unsigned desktop-shell installers on macOS, Windows and Linux whenever that template changes (or on manual dispatch), and on macOS verifies the ad-hoc signature and runs the packaged app.
 
 ## Maintenance
 

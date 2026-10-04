@@ -75,3 +75,35 @@ test('missing command reports a clear error', async () => {
   assert.ok(await until(() => /failed to start/.test(ui.lastFrame())), ui.lastFrame());
   ui.unmount();
 });
+
+test('text and Enter in one chunk (paste, fast typing) still sends the prompt', async () => {
+  const store = memoryStore();
+  const config = { ...DEFAULTS, command: process.execPath, args: [FAKE, '{prompt}'] };
+  const ui = render(React.createElement(App, { config, store, rows: 24 }));
+  await wait(50);
+  ui.stdin.write('pasted prompt\r');
+  assert.ok(await until(() => /agent got: pasted prompt/.test(ui.lastFrame())), ui.lastFrame());
+  ui.unmount();
+});
+
+test('newlines inside pasted text become spaces instead of sending', async () => {
+  const config = { ...DEFAULTS, command: process.execPath, args: [FAKE, '{prompt}'] };
+  const ui = render(React.createElement(App, { config, store: memoryStore(), rows: 24 }));
+  await wait(50);
+  ui.stdin.write('line one\nline two');
+  await wait(30);
+  assert.match(ui.lastFrame(), /> line one line two/);
+  ui.unmount();
+});
+
+test('says so when no agent command is configured', async () => {
+  const config = loadConfig({ argv: [], env: {}, cwd: '/nonexistent' });
+  if (config.configPath) return; // a real ~/.config file on this machine
+  assert.equal(config.configured, false);
+  const ui = render(React.createElement(App, { config, store: memoryStore(), rows: 24 }));
+  await wait(50);
+  assert.match(ui.lastFrame(), /No agent command set/);
+  ui.unmount();
+  const set = loadConfig({ argv: ['--', 'agent'], env: {}, cwd: '/nonexistent' });
+  assert.equal(set.configured, true);
+});

@@ -82,7 +82,7 @@ export function createRouter(cfg, { log = createLogger(cfg.log), env = process.e
       const key = provider.apiKeyEnv ? env[provider.apiKeyEnv] : provider.apiKey;
       if (key) headers.authorization = `Bearer ${key}`;
       const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), provider.timeoutMs || cfg.timeoutMs);
+      let timer = setTimeout(() => ctrl.abort(), provider.timeoutMs || cfg.timeoutMs);
       try {
         const upstream = await fetchImpl(provider.baseUrl + url.pathname.replace(/^\/v1/, ''), {
           method: 'POST',
@@ -105,13 +105,28 @@ export function createRouter(cfg, { log = createLogger(cfg.log), env = process.e
           'x-router-request-id': id,
         };
         if (entry.stream && upstream.ok && upstream.body) {
+          // timeoutMs bounds the wait for the upstream to start answering. A stream that has
+          // started may run as long as it keeps sending; it is cut only after timeoutMs of silence.
+          const idleMs = provider.timeoutMs || cfg.timeoutMs;
+          let cut = null;
+          const idle = () => {
+            clearTimeout(timer);
+            timer = setTimeout(() => { cut = 'upstream idle timeout'; ctrl.abort(); }, idleMs);
+          };
+          idle();
           res.writeHead(upstream.status, { ...outHeaders, 'cache-control': 'no-cache' });
           const stream = Readable.fromWeb(upstream.body);
-          stream.on('error', () => res.destroy());
+          stream.on('data', idle);
+          stream.on('error', () => { cut ||= 'upstream error'; res.destroy(); });
+          stream.on('end', () => clearTimeout(timer));
+          // Stop paying for tokens nobody will read.
+          res.on('close', () => {
+            if (!res.writableFinished) { cut ||= 'client closed'; ctrl.abort(); }
+          });
           stream.pipe(res);
           await new Promise((r) => res.on('close', r));
           clearTimeout(timer);
-          finish(upstream.status, { provider: t.provider });
+          finish(upstream.status, { provider: t.provider, ...(cut ? { error: `stream cut: ${cut}` } : {}) });
           return;
         }
         const text = await upstream.text();

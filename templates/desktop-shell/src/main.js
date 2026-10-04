@@ -1,11 +1,23 @@
 const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron');
+const { execFile } = require('node:child_process');
 const path = require('node:path');
 const pty = require('node-pty');
-const { loadConfig, resolveLaunch, writeDefaultConfig } = require('./config');
+const { loadConfig, resolveLaunch, writeDefaultConfig, defaultShell, parseShellPath, mergePath, LOGIN_PATH_SCRIPT, findOnPath } = require('./config');
 
 const SMOKE = process.env.DESKTOP_SMOKE === '1';
 const SMOKE_MARKER = 'smoke-marker-42';
 const sessions = new Map(); // webContents.id -> pty
+
+// Adopt the login shell's PATH once at startup (see config.js). Never blocks for more than 5 s.
+const pathReady = process.platform === 'win32'
+  ? Promise.resolve()
+  : new Promise((resolve) => {
+    execFile(defaultShell(), ['-ilc', LOGIN_PATH_SCRIPT], { encoding: 'utf8', timeout: 5000 }, (_err, stdout) => {
+      const loginPath = parseShellPath(stdout || '');
+      if (loginPath) process.env.PATH = mergePath(loginPath, process.env.PATH);
+      resolve();
+    });
+  });
 
 function configPath() {
   return process.env.DESKTOP_CONFIG || path.join(app.getPath('userData'), 'config.json');
@@ -39,21 +51,37 @@ function killSession(id) {
   }
 }
 
-ipcMain.handle('pty:start', (event, { cols, rows }) => {
+ipcMain.handle('pty:start', async (event, { cols, rows }) => {
   const id = event.sender.id;
   killSession(id);
+  await pathReady;
   const cfg = loadConfig(configPath());
-  if (SMOKE) {
+  if (SMOKE && process.env.DESKTOP_SMOKE_CMD) {
+    // Smoke-test a real command lookup: the command must print smoke-marker-42.
+    cfg.command = process.env.DESKTOP_SMOKE_CMD;
+    cfg.args = [];
+  } else if (SMOKE) {
     cfg.command = process.platform === 'win32' ? 'cmd.exe' : '/bin/sh';
     cfg.args = process.platform === 'win32' ? ['/c', 'echo smoke-marker-%NUMBER%'] : ['-c', 'echo smoke-marker-$((40+2))'];
     cfg.env = { NUMBER: '42' };
   }
   const launch = resolveLaunch(cfg);
+  if (!findOnPath(launch.file, launch.env.PATH)) {
+    return {
+      ok: false,
+      error: `Could not find "${launch.file}" on PATH. If it runs in your terminal, set "command" to its full path (run: command -v ${launch.file})`,
+      configPath: configPath(),
+    };
+  }
   let proc;
   try {
     proc = pty.spawn(launch.file, launch.args, { name: 'xterm-256color', cols, rows, cwd: launch.cwd, env: launch.env });
   } catch (e) {
-    return { ok: false, error: `Could not start "${launch.file}": ${e.message}`, configPath: configPath() };
+    return {
+      ok: false,
+      error: `Could not start "${launch.file}": ${e.message}`,
+      configPath: configPath(),
+    };
   }
   sessions.set(id, proc);
   proc.onData((data) => {

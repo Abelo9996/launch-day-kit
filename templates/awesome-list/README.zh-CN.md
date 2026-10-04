@@ -35,3 +35,7 @@
 ## 贡献
 
 欢迎 PR，格式：`- [名称](链接) - 描述。` 详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+## 许可证
+
+MIT。非官方项目，与 __PLATFORM__ 官方无关。

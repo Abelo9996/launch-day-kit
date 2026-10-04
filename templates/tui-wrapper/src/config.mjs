@@ -40,7 +40,7 @@ export function splitCommand(str) {
 }
 
 export function loadConfig({ argv = [], env = process.env, cwd = process.cwd() } = {}) {
-  let cfg = { ...DEFAULTS };
+  let cfg = { ...DEFAULTS, configured: false };
   const candidates = [
     argv.includes('--config') ? argv[argv.indexOf('--config') + 1] : null,
     env.AGENT_TUI_CONFIG,
@@ -49,18 +49,18 @@ export function loadConfig({ argv = [], env = process.env, cwd = process.cwd() }
   ].filter(Boolean);
   for (const p of candidates) {
     if (existsSync(p)) {
-      cfg = { ...cfg, ...JSON.parse(readFileSync(p, 'utf8')), configPath: p };
+      cfg = { ...cfg, ...JSON.parse(readFileSync(p, 'utf8')), configPath: p, configured: true };
       break;
     }
   }
   if (env.AGENT_CMD) {
     const [command, ...args] = splitCommand(env.AGENT_CMD);
-    cfg = { ...cfg, command, args };
+    cfg = { ...cfg, command, args, configured: true };
   }
   const dd = argv.indexOf('--');
   if (dd >= 0 && argv.length > dd + 1) {
     const [command, ...args] = argv.slice(dd + 1);
-    cfg = { ...cfg, command, args };
+    cfg = { ...cfg, command, args, configured: true };
   }
   return cfg;
 }

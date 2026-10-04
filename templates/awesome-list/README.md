@@ -55,7 +55,7 @@ New here? Start with [Official](#official), then [Clients and GUIs](#clients-and
 
 ## Community
 
-- [Discussions](__REPO_URL__/discussions) - Questions, show and tell.
+- [Issues](__REPO_URL__/issues) - Questions, requests and show and tell.
 
 ## Contributing
 
@@ -63,4 +63,4 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md). One entry per PR, format `- [Name](link
 
 ## License
 
-MIT
+MIT. Unofficial; not affiliated with the vendor of __PLATFORM__.

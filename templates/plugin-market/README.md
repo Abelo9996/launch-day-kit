@@ -8,6 +8,7 @@
 
 **Browse:** https://__OWNER__.github.io/__SLUG__/
 
+<!-- TODO before posting: put a real screenshot at docs/screenshot.png (real app, real output, under 3 MB). -->
 ![screenshot](docs/screenshot.png)
 
 ## Why
@@ -50,4 +51,4 @@ Settings, Pages, Source: **GitHub Actions**. Every push to `main` runs `.github/
 
 ## License
 
-MIT. Not affiliated with the vendor of __PLATFORM__.
+MIT. Unofficial; not affiliated with the vendor of __PLATFORM__.

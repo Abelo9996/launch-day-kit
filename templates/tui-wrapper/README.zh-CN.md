@@ -4,6 +4,7 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+<!-- TODO before posting: put a real recording at docs/demo.gif (real app, real output, under 3 MB). -->
 ![demo](docs/demo.gif)
 
 ```bash
@@ -28,4 +29,4 @@ enter 发送，tab 切换会话，ctrl+n 新建，ctrl+x 停止，ctrl+d 删除�
 
 ## 许可证
 
-MIT
+MIT。非官方项目，与 __PLATFORM__ 官方无关。

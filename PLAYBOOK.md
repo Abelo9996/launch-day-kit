@@ -44,37 +44,55 @@ Pick at most two forms per launch. Awesome list plus one build.
 
 Do this when nothing is launching.
 
-- [ ] `npm test` and `npm run rehearse` pass on this machine. CI is green.
+- [ ] Kit cloned (`git clone https://github.com/Abelo9996/launch-day-kit`), Node 22+. `npm test` and `npm run rehearse` pass on this machine.
 - [ ] Keep a watchlist with expected dates (see Calendar). For each, write down: likely brand spelling, likely repo names, which two forms you would ship.
 - [ ] For launches with a known name, check GitHub for the names you want. Note fallbacks.
 - [ ] Recording tool ready (`vhs` for terminal GIFs, Kap or the OS screen recorder for apps). Keep GIFs under 3 MB.
 - [ ] Accounts warm: X, Hacker News, Reddit (karma above subreddit minimums), V2EX, Juejin or Zhihu for Chinese launches, relevant Discord servers.
 - [ ] Draft post text per form with blanks for the name and link (see Posting).
-- [ ] `gh auth status` works, GitHub Pages enabled on your account, Actions minutes available.
+- [ ] `gh auth status` shows you logged in (the scaffolder takes your GitHub user from it; otherwise `export LAUNCH_OWNER=<you>`). `git config --global user.name` and `user.email` are set. Actions minutes available.
 
 ## T+0 to T+2 h: claim the name, ship the first thing
 
 - [ ] **Confirm it is real.** Official blog post, official repo or official model card. Rumors do not count.
 - [ ] **Check what the vendor shipped.** If the vendor already has the form you planned (desktop app, plugin directory, list), drop that form.
 - [ ] **Search GitHub** for `<brand> <form>` sorted by newest. If someone took the obvious name in the last hour with a working repo, choose a different form rather than a worse name.
-- [ ] **Scaffold** (under 1 minute):
+- [ ] **Scaffold** (under 1 minute, from the kit directory). Add `--zh` for Chinese-lab launches:
 
 ```bash
 node bin/new-launch.mjs --platform "Qwen 4" --slug awesome-qwen4 --template awesome-list --out ../awesome-qwen4 --zh
-cd ../awesome-qwen4 && npm test
+cd ../awesome-qwen4 && npm install && npm test
 ```
 
-- [ ] **Fill the first screen**: real headline, 10 to 20 real entries (awesome-list) or the real CLI command in config (tui/desktop), real install line.
-- [ ] **Create and push public:** `gh repo create <owner>/<slug> --public --source . --push --description "<one plain sentence>"`. Add topics: brand name, form (`awesome-list`, `desktop-app`, `tui`), `ai-agent` or `llm`.
+- [ ] **Replace the stand-ins.** The scaffolder prints each one as `file:lines`. Re-run `node <kit>/bin/new-launch.mjs --check .` until only the demo image is left (that one can follow by +2 h). Per template:
+
+| Template | Replace | Then check |
+| --- | --- | --- |
+| awesome-list | Example entries with 10 to 20 real ones, in both READMEs | `npm test`, `npm run links:online` |
+| tui-wrapper | `your-agent-cli` with the real command in README and `<slug>.config.example.json` | `node bin/cli.mjs -- <real cli> -p {prompt}` against the real CLI once |
+| desktop-shell | `your-agent-cli` in README | `npm start`, set the real command in Config, run one prompt |
+| plugin-market | `installTemplate` and 5+ real entries in `registry.json` | `npm start`, open http://127.0.0.1:4173/ |
+| model-router | `baseUrl` and model IDs in `router.config.example.json` | `npm start -- --init`, export the key, one live `curl` (README has it) |
+
+- [ ] **Read the headline once.** One sentence, brand name in it, what the user gets. Edit it in `README.md` (and `README.zh-CN.md`).
+- [ ] **Commit, create and push public:**
+
+```bash
+git add -A && git commit -m "Fill in for launch"
+gh repo create <owner>/<slug> --public --source . --push --description "<one plain sentence with the brand name>"
+gh repo edit --add-topic <brand>,awesome-list,llm        # form topic: awesome-list, tui, desktop-app, plugins, llm-router
+```
+
+- [ ] **plugin-market only:** turn on Pages once: `gh api -X POST repos/<owner>/<slug>/pages -f build_type=workflow` (or Settings, Pages, Source: GitHub Actions), then re-run the `pages` workflow.
 - [ ] **Post once** (X reply under the vendor's launch post, with link). Do not wait for polish.
 
 Target: awesome-list public by +1 h, TUI by +1 h, desktop repo public by +2 h.
 
 ## T+2 to T+12 h: a working release and the demo
 
-- [ ] **Demo GIF or screenshot on the first screen.** Real product, real output. This is the single biggest README lever.
-- [ ] **Desktop: tag `v0.1.0`** so the release workflow builds mac/win/linux installers. Target before +12 h. Test the mac build yourself.
-- [ ] **ZH README** if not done (`README.zh-CN.md` is in every template with `--zh`).
+- [ ] **Demo GIF or screenshot on the first screen.** Real product, real output, at the `docs/` path the README already references (`--check` reports it until the file exists). This is the single biggest README lever.
+- [ ] **Desktop: `git tag v0.1.0 && git push origin v0.1.0`.** The release workflow builds macOS (Apple Silicon), Windows and Linux installers in about 10 minutes. Target before +12 h. Download the `.dmg` from the release and open it yourself: expect the one-time macOS warning the README explains (Open Anyway in Privacy & Security), not a "damaged" message.
+- [ ] **ZH README** if you scaffolded without `--zh`: scaffold the same template again with `--zh --no-git` into a temp dir, copy `README.zh-CN.md` over and add the `[English](README.md) | [简体中文](README.zh-CN.md)` line under the headline.
 - [ ] **Answer every issue within an hour.** Early issues are your best signal and early users notice responsiveness.
 - [ ] **Second round of posts** (see Posting) once there is a release or 30+ list entries.
 - [ ] **Merge list PRs fast.** For awesome lists, contributor PRs are the growth engine. Merge or comment within an hour on day 0 and 1.

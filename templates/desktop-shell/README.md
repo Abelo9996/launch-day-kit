@@ -6,9 +6,15 @@
 [English](README.md) | [简体中文](README.zh-CN.md)
 <!-- zh:end -->
 
+<!-- TODO before posting: put a real screenshot at docs/screenshot.png (real app, real output, under 3 MB). -->
 ![screenshot](docs/screenshot.png)
 
-**Download:** [latest release](__REPO_URL__/releases/latest) (`.dmg`, `.exe`, `.AppImage`, `.deb`)
+**Download:** [latest release](__REPO_URL__/releases/latest) (`.dmg` for Apple Silicon Macs, `.exe`, `.AppImage`, `.deb`)
+
+**First launch:** the builds are not signed with a paid certificate, so the OS warns once.
+- macOS 15 and later: open the app, click **Done** on the warning, then System Settings, Privacy & Security, **Open Anyway** next to the app, and confirm. Right-click, Open no longer skips the warning. Or run `xattr -dr com.apple.quarantine "/Applications/__PLATFORM__ Desktop.app"` once.
+- Windows: SmartScreen says "Windows protected your PC". Click **More info**, then **Run anyway**.
+- Linux: `chmod +x` the `.AppImage`, or install the `.deb`.
 
 ## Why
 
@@ -43,7 +49,9 @@ npm test           # unit tests + launches the app headless and checks pty outpu
 npm run dist       # installers for the current OS into release/
 ```
 
-Push a tag like `v0.1.0` and `.github/workflows/release.yml` builds mac, Windows and Linux installers and attaches them to a GitHub release. Builds are unsigned until you add signing secrets, so macOS users need right-click, Open on first launch.
+Push a tag (`git tag v0.1.0 && git push origin v0.1.0`) and `.github/workflows/release.yml` builds macOS (Apple Silicon), Windows and Linux installers and attaches them to a GitHub release, in about 10 minutes. Without signing secrets the macOS build is ad-hoc signed and not notarized, so users see the first-launch warning above. To sign and notarize, add the repo secrets `CSC_LINK` (base64 `.p12` of a Developer ID Application certificate), `CSC_KEY_PASSWORD`, `APPLE_ID`, `APPLE_APP_SPECIFIC_PASSWORD` and `APPLE_TEAM_ID`; Windows signing uses `CSC_LINK` and `CSC_KEY_PASSWORD` with a code signing certificate.
+
+Opened from Finder, the Dock or a desktop launcher, the app reads `PATH` from your login shell so CLIs installed with Homebrew, npm or pipx are found. If yours still is not, set `command` to its full path (`command -v <cli>` prints it).
 
 <!-- zh:start -->
 ## 中文
@@ -53,4 +61,4 @@ Push a tag like `v0.1.0` and `.github/workflows/release.yml` builds mac, Windows
 
 ## License
 
-MIT
+MIT. Unofficial; not affiliated with the vendor of __PLATFORM__.

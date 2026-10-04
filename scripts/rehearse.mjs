@@ -20,7 +20,8 @@ const only = value('--only') ? value('--only').split(',') : listTemplates();
 const outRoot = resolve(value('--out') || mkdtempSync(join(tmpdir(), 'launch-rehearsal-')));
 const zh = !flag('--no-zh');
 const PLATFORM = 'Zephyr Agent 2';
-const LEFTOVER = /__(PLATFORM|SLUG|OWNER|REPO_URL|DATE|YEAR)__/;
+const LEFTOVER = /__(PLATFORM|SLUG|OWNER|AUTHOR|REPO_URL|DATE|YEAR)__/;
+const OWNER = process.env.LAUNCH_OWNER || 'rehearsal-owner';
 
 function sh(cmd, cwd) {
   const t = Date.now();
@@ -50,6 +51,7 @@ function publishable(dir) {
     if (/[\u2013\u2014]/.test(text)) problems.push(`en/em dash in ${f.slice(dir.length + 1)}`);
   }
   if (!existsSync(join(dir, 'LICENSE'))) problems.push('no LICENSE');
+  else if (!readFileSync(join(dir, 'LICENSE'), 'utf8').includes(`Copyright (c) ${new Date().getUTCFullYear()} `)) problems.push('LICENSE has no copyright line for this year');
   const readme = existsSync(join(dir, 'README.md')) ? readFileSync(join(dir, 'README.md'), 'utf8') : '';
   if (!/^# .+\n\n(\*\*|> ).+/m.test(readme)) problems.push('README lacks a one-sentence headline under the title');
   if (zh && !existsSync(join(dir, 'README.zh-CN.md'))) problems.push('no README.zh-CN.md');
@@ -68,7 +70,7 @@ for (const template of only) {
   const row = { template, steps: {}, problems: [] };
   const t0 = Date.now();
   try {
-    scaffold({ platform: PLATFORM, slug, template, out: dir, zh, git: true, date: new Date().toISOString().slice(0, 10) });
+    row.todos = scaffold({ platform: PLATFORM, slug, template, out: dir, zh, git: true, owner: OWNER, date: new Date().toISOString().slice(0, 10) }).todos.length;
     row.steps.scaffold = Date.now() - t0;
   } catch (e) {
     row.problems.push(`scaffold: ${e.message}`);
@@ -93,7 +95,7 @@ for (const template of only) {
   row.ok = row.problems.length === 0;
   failed ||= !row.ok;
   rows.push(row);
-  console.log(`${row.ok ? 'PASS' : 'FAIL'} ${template}  scaffold ${fmt(row.steps.scaffold ?? 0)}  install ${fmt(row.steps.install ?? 0)}  test ${fmt(row.steps.test ?? 0)}  total ${fmt(row.total)}`);
+  console.log(`${row.ok ? 'PASS' : 'FAIL'} ${template}  scaffold ${fmt(row.steps.scaffold ?? 0)}  install ${fmt(row.steps.install ?? 0)}  test ${fmt(row.steps.test ?? 0)}  total ${fmt(row.total)}  stand-ins to replace by hand: ${row.todos ?? '?'}`);
   for (const p of row.problems) console.log('  ' + p.split('\n').join('\n  '));
 }
 
