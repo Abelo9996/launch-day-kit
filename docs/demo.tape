@@ -28,4 +28,4 @@ Sleep 3s
 Type "cd ../nova-router && npm install --silent && npm test"
 Sleep 800ms
 Enter
-Sleep 8s
+Sleep 10s

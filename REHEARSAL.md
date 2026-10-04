@@ -2,22 +2,22 @@
 
 Goal: under 30 minutes from scaffold to a publishable repo, per template.
 
-"Publishable" here means: scaffolded with a fake platform name ("Zephyr Agent 2"), dependencies installed, the template's own `npm test` passing, no placeholders left, no en/em dashes, LICENSE present, headline under the title, ZH README present, initial git commit made. The rehearsal script checks all of that.
+"Publishable" here means: scaffolded with a fake platform name ("Zephyr Agent 2"), dependencies installed, the template's own `npm test` passing, no placeholders left, no en/em dashes, LICENSE with a copyright line for this year, headline under the title, ZH README present, initial git commit made. The rehearsal script checks all of that. It also prints how many stand-ins (example entries, `your-agent-cli`, placeholder model IDs, demo image) are left for a human to replace; `node bin/new-launch.mjs --check <dir>` lists them.
 
 ## Machine time (measured)
 
 Warm caches (npm and Electron already cached on this machine):
 
 <!-- timings:start -->
-Run 2026-10-03 08:46 UTC, node v22.22.2, darwin-arm64, platform "Zephyr Agent 2", zh on.
+Run 2026-10-04 03:42 UTC, node v22.22.2, darwin-arm64, platform "Zephyr Agent 2", zh on.
 
 | Template | Result | Scaffold | Install | Smoke test | Total (machine time) |
 | --- | --- | --- | --- | --- | --- |
-| awesome-list | pass | 44 ms | 0 ms | 280 ms | 335 ms |
-| desktop-shell | pass | 50 ms | 1.2 s | 1.4 s | 2.7 s |
-| model-router | pass | 49 ms | 0 ms | 327 ms | 388 ms |
-| plugin-market | pass | 48 ms | 0 ms | 352 ms | 410 ms |
-| tui-wrapper | pass | 49 ms | 639 ms | 925 ms | 1.6 s |
+| awesome-list | pass | 65 ms | 0 ms | 360 ms | 438 ms |
+| desktop-shell | pass | 75 ms | 2.0 s | 4.2 s | 6.3 s |
+| model-router | pass | 167 ms | 0 ms | 1.7 s | 1.8 s |
+| plugin-market | pass | 119 ms | 0 ms | 512 ms | 645 ms |
+| tui-wrapper | pass | 96 ms | 1.2 s | 1.5 s | 2.8 s |
 <!-- timings:end -->
 
 Cold caches (empty npm cache and Electron download cache):
